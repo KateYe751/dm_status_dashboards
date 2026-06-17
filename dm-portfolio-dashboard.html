@@ -246,18 +246,19 @@ body{font-family:'Salesforce Sans',Arial,sans-serif;background:#f3f2f2;color:#18
 const TODAY = new Date('2026-06-17');
 
 const CASES = [
-  { id:'CS-001', name:'Acme Corp',       dm:'Sarah Tan',  milestone:3, forecastDate:'2026-07-15', complexity:72, status:'Green',  blockerAge:5,  lastUpdated:2,  waitingOn:'Customer',  depAge:5  },
-  { id:'CS-002', name:'Globex Corp',     dm:'Mike Lim',   milestone:5, forecastDate:'2026-08-01', complexity:85, status:'Red',    blockerAge:18, lastUpdated:3,  waitingOn:'Product',   depAge:18 },
-  { id:'CS-003', name:'Initech Ltd',     dm:'Anna Chen',  milestone:2, forecastDate:'2026-09-10', complexity:45, status:'Yellow', blockerAge:9,  lastUpdated:6,  waitingOn:'LRC',       depAge:9  },
-  { id:'CS-004', name:'Umbrella Corp',   dm:'Sarah Tan',  milestone:7, forecastDate:'2026-06-30', complexity:91, status:'Red',    blockerAge:22, lastUpdated:8,  waitingOn:'CE',        depAge:22 },
-  { id:'CS-005', name:'Vandelay Ind',    dm:'',           milestone:1, forecastDate:'2026-10-01', complexity:30, status:'Green',  blockerAge:0,  lastUpdated:1,  waitingOn:'',          depAge:0  },
-  { id:'CS-006', name:'Soylent Corp',    dm:'Mike Lim',   milestone:4, forecastDate:'2026-07-20', complexity:68, status:'Yellow', blockerAge:11, lastUpdated:4,  waitingOn:'SE',        depAge:11 },
-  { id:'CS-007', name:'Massive Dynamic', dm:'Anna Chen',  milestone:6, forecastDate:'2026-08-15', complexity:55, status:'Green',  blockerAge:3,  lastUpdated:2,  waitingOn:'Customer',  depAge:3  },
-  { id:'CS-008', name:'Oceanic Airlines',dm:'',           milestone:2, forecastDate:'2026-11-01', complexity:40, status:'Yellow', blockerAge:0,  lastUpdated:10, waitingOn:'Case team', depAge:7  },
-  { id:'CS-009', name:'Bluth Company',   dm:'James Park', milestone:9, forecastDate:'2026-06-01', complexity:78, status:'Green',  blockerAge:0,  lastUpdated:3,  waitingOn:'',          depAge:0, closed:true },
-  { id:'CS-010', name:'Sterling Cooper', dm:'James Park', milestone:1, forecastDate:'2026-12-01', complexity:25, status:'Green',  blockerAge:0,  lastUpdated:1,  waitingOn:'Product',   depAge:2  },
-  { id:'CS-011', name:'Dunder Mifflin',  dm:'Sarah Tan',  milestone:4, forecastDate:'2026-07-05', complexity:60, status:'Yellow', blockerAge:16, lastUpdated:9,  waitingOn:'Legal',     depAge:16 },
-  { id:'CS-012', name:'Reynholm Ind',    dm:'Mike Lim',   milestone:3, forecastDate:'2026-08-20', complexity:48, status:'Green',  blockerAge:2,  lastUpdated:1,  waitingOn:'SE',        depAge:2  },
+  { id:'CS-001', name:'Deel',            dm:'Kate Ye',  milestone:3, forecastDate:'2026-07-15', complexity:72, status:'Green',  blockerAge:5,  lastUpdated:2,  waitingOn:'Customer',  depAge:5  },
+  { id:'CS-002', name:'OTA',             dm:'Chris Yip',   milestone:5, forecastDate:'2026-08-01', complexity:85, status:'Red',    blockerAge:18, lastUpdated:3,  waitingOn:'Product',   depAge:18 },
+  { id:'CS-003', name:'BanPay',          dm:'Meet Shah',  milestone:2, forecastDate:'2026-09-10', complexity:45, status:'Yellow', blockerAge:9,  lastUpdated:6,  waitingOn:'LRC',       depAge:9  },
+  { id:'CS-004', name:'LBF Travel, Inc', dm:'Kate Ye',  milestone:7, forecastDate:'2026-06-30', complexity:91, status:'Red',    blockerAge:22, lastUpdated:8,  waitingOn:'CE',        depAge:22 },
+  { id:'CS-005', name:'Roblox',          dm:'',           milestone:1, forecastDate:'2026-10-01', complexity:30, status:'Green',  blockerAge:0,  lastUpdated:1,  waitingOn:'',          depAge:0  },
+  { id:'CS-006', name:'Navan',           dm:'Chris Yip',   milestone:4, forecastDate:'2026-07-20', complexity:68, status:'Yellow', blockerAge:11, lastUpdated:4,  waitingOn:'SE',        depAge:11 },
+  { id:'CS-007', name:'Dubpay',          dm:'Meet Shah',  milestone:6, forecastDate:'2026-08-15', complexity:55, status:'Green',  blockerAge:3,  lastUpdated:2,  waitingOn:'Customer',  depAge:3  },
+  { id:'CS-008', name:'Payability',      dm:'',           milestone:2, forecastDate:'2026-11-01', complexity:40, status:'Yellow', blockerAge:0,  lastUpdated:10, waitingOn:'Case team', depAge:7  },
+  { id:'CS-009', name:'LATAM',           dm:'Michael Eshoo', milestone:9, forecastDate:'2026-06-01', complexity:78, status:'Green',  blockerAge:0,  lastUpdated:3,  waitingOn:'',          depAge:0, closed:true },
+  { id:'CS-010', name:'ProcureDesk LLC', dm:'Michael Eshoo', milestone:1, forecastDate:'2026-12-01', complexity:25, status:'Green',  blockerAge:0,  lastUpdated:1,  waitingOn:'Product',   depAge:2  },
+  { id:'CS-011', name:'Xsolla',          dm:'Kate Ye',  milestone:4, forecastDate:'2026-07-05', complexity:60, status:'Yellow', blockerAge:16, lastUpdated:9,  waitingOn:'Legal',     depAge:16 },
+  { id:'CS-012', name:'Trucker Path',    dm:'Chris Yip',   milestone:3, forecastDate:'2026-08-20', complexity:48, status:'Green',  blockerAge:2,  lastUpdated:1,  waitingOn:'SE',        depAge:2  },
+  { id:'CS-013', name:'Routable',        dm:'Meet Shah',  milestone:1, forecastDate:'2026-09-30', complexity:35, status:'Green',  blockerAge:0,  lastUpdated:2,  waitingOn:'',          depAge:0  },
 ];
 
 const ACTIVE = CASES.filter(c => !c.closed);
