@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DM Portfolio Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Salesforce Sans',Arial,sans-serif;background:#f3f2f2;color:#181818;font-size:13px}
+
+/* Header */
+.hdr{background:#032d60;color:#fff;padding:12px 24px;display:flex;align-items:center;gap:16px}
+.hdr-logo{font-size:18px;font-weight:700;color:#c9f0ff;letter-spacing:-0.5px}
+.hdr-sep{width:1px;height:32px;background:rgba(255,255,255,0.2)}
+.hdr-title{font-size:15px;font-weight:700}
+.hdr-sub{font-size:11px;color:#9dbfdc;margin-top:2px}
+.hdr-right{margin-left:auto;font-size:11px;color:#9dbfdc}
+
+/* Nav */
+.nav{background:#0b2d59;display:flex;padding:0 24px;border-bottom:2px solid #064282}
+.ntab{padding:10px 18px;font-size:12px;font-weight:600;color:#c2d8f0;cursor:pointer;border-bottom:3px solid transparent;transition:all .15s;white-space:nowrap;user-select:none}
+.ntab:hover{color:#fff;background:rgba(255,255,255,.08)}
+.ntab.on{color:#fff;border-bottom-color:#c9f0ff;background:rgba(255,255,255,.1)}
+
+/* Layout */
+.main{padding:20px 24px;max-width:1440px;margin:0 auto}
+.dash{display:none}
+.dash.on{display:block}
+.dh{margin-bottom:16px}
+.dh-title{font-size:16px;font-weight:700;color:#032d60}
+.dh-sub{font-size:12px;color:#706e6b;margin-top:2px}
+
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.g2{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:16px}
+
+/* KPI */
+.kpi{background:#fff;border:1px solid #dddbda;border-radius:6px;padding:16px}
+.kpi-lbl{font-size:11px;font-weight:600;color:#706e6b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.kpi-val{font-size:32px;font-weight:700;line-height:1;color:#032d60}
+.kpi-hint{font-size:11px;color:#706e6b;margin-top:4px}
+.kpi.c-red   {border-left:4px solid #ba0517}.kpi.c-red    .kpi-val{color:#ba0517}
+.kpi.c-yellow{border-left:4px solid #f2b200}.kpi.c-yellow .kpi-val{color:#a16a00}
+.kpi.c-green {border-left:4px solid #3ba755}.kpi.c-green  .kpi-val{color:#0a6042}
+.kpi.c-blue  {border-left:4px solid #0176d3}.kpi.c-blue   .kpi-val{color:#0176d3}
+
+/* Card */
+.card{background:#fff;border:1px solid #dddbda;border-radius:6px;overflow:hidden;margin-bottom:16px}
+.card-hd{padding:11px 16px;border-bottom:1px solid #f3f2f2;display:flex;align-items:center;justify-content:space-between}
+.card-hd h3{font-size:12px;font-weight:700;color:#444;text-transform:uppercase;letter-spacing:.5px}
+.card-bd{padding:16px}
+.ch-wrap{position:relative}
+.bdg{font-size:10px;background:#e8e8e8;color:#444;padding:2px 8px;border-radius:10px;font-weight:600}
+
+/* List */
+.clist{list-style:none}
+.clist li{padding:7px 0;border-bottom:1px solid #f3f2f2;display:flex;align-items:center;gap:6px;font-size:12px}
+.clist li:last-child{border-bottom:none}
+.cid{font-weight:600;color:#0176d3;min-width:58px;flex-shrink:0}
+.cname{flex:1;color:#181818}
+.cmeta{color:#706e6b;font-size:11px;white-space:nowrap}
+.no-data{color:#706e6b;font-size:12px;font-style:italic;padding:8px 0;border-bottom:none!important}
+
+/* Dot */
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.dot.r{background:#ba0517}.dot.y{background:#f2b200}.dot.g{background:#3ba755}.dot.gr{background:#b0adab}
+
+/* Progress */
+.prow{margin-bottom:10px}
+.plbl{display:flex;justify-content:space-between;font-size:11px;color:#444;margin-bottom:3px}
+.pbar{height:8px;background:#e8e8e8;border-radius:4px;overflow:hidden}
+.pfill{height:100%;background:#0176d3;border-radius:4px;transition:width .5s}
+.pfill.ph{background:#ba0517}.pfill.pm{background:#f2b200}.pfill.pl{background:#3ba755}
+
+/* Table */
+.dt{width:100%;border-collapse:collapse;font-size:12px}
+.dt th{background:#f3f2f2;font-weight:700;color:#444;padding:8px 10px;text-align:left;border-bottom:2px solid #dddbda;font-size:11px;text-transform:uppercase;letter-spacing:.4px;white-space:nowrap}
+.dt td{padding:8px 10px;border-bottom:1px solid #f3f2f2;vertical-align:middle}
+.dt tr:hover td{background:#f8f8f8}
+.sg{color:#0a6042;font-weight:600}.sy{color:#a16a00;font-weight:600}.sr{color:#ba0517;font-weight:600}
+.mchip{display:inline-block;padding:2px 7px;border-radius:10px;font-size:10px;font-weight:700;background:#e8f4fd;color:#0176d3}
+.warn{color:#ba0517}
+
+/* Capacity free-up widget */
+.cap-dm{margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid #f3f2f2}
+.cap-dm:last-child{margin-bottom:0;border-bottom:none}
+.cap-dm-hdr{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.cap-dm-name{font-weight:700;color:#032d60;font-size:13px;min-width:100px}
+.free-tag{font-size:11px;padding:2px 9px;border-radius:10px;font-weight:600;white-space:nowrap}
+.free-tag.next{background:#fde8e8;color:#ba0517}
+.free-tag.full{background:#e8f4fd;color:#0176d3}
+.cap-cases{display:flex;flex-wrap:wrap;gap:6px}
+.cap-case{display:flex;flex-direction:column;gap:2px;border:1px solid #dddbda;border-radius:6px;padding:8px 10px;min-width:130px}
+.cap-case.urgent{border-color:#f99b9b;background:#fff5f5}
+.cap-case.soon  {border-color:#f2d472;background:#fffbea}
+.cap-case.ok    {border-color:#a8d9b5;background:#f2fdf5}
+.cap-cid  {font-size:10px;color:#0176d3;font-weight:700}
+.cap-cname{font-size:11px;color:#181818;font-weight:600}
+.cap-cdate{font-size:11px;color:#706e6b}
+.cap-cdays{font-size:11px;font-weight:700}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-logo">⚡ Salesforce</div>
+  <div class="hdr-sep"></div>
+  <div>
+    <div class="hdr-title">DM Portfolio Dashboard</div>
+    <div class="hdr-sub">Delivery Management · All Active Cases</div>
+  </div>
+  <div class="hdr-right">Last updated: <span id="hdr-date">—</span></div>
+</div>
+
+<div class="nav">
+  <div class="ntab on"  onclick="showDash(0)">📊 Overall Status</div>
+  <div class="ntab"     onclick="showDash(1)">🚦 Delivery Health</div>
+  <div class="ntab"     onclick="showDash(2)">👥 Capacity</div>
+  <div class="ntab"     onclick="showDash(3)">🔗 Dependency Trends</div>
+  <div class="ntab"     onclick="showDash(4)">📋 All Cases</div>
+</div>
+
+<div class="main">
+
+  <!-- ── DASH 0: Overall Status ── -->
+  <div class="dash on" id="dash-0">
+    <div class="dh">
+      <div class="dh-title">Overall Status</div>
+      <div class="dh-sub">Leadership portfolio view · All active delivery cases</div>
+    </div>
+    <div class="g4">
+      <div class="kpi c-blue"><div class="kpi-lbl">Active Cases</div><div class="kpi-val" id="k-active">—</div><div class="kpi-hint">Currently in delivery</div></div>
+      <div class="kpi">       <div class="kpi-lbl">Avg Days in Milestone</div><div class="kpi-val" id="k-avgdays">—</div><div class="kpi-hint">Across active portfolio</div></div>
+      <div class="kpi c-red"> <div class="kpi-lbl">Cases Missing Owner</div><div class="kpi-val" id="k-noowner">—</div><div class="kpi-hint">No DM assigned</div></div>
+      <div class="kpi c-green"><div class="kpi-lbl">Closed This Quarter</div><div class="kpi-val" id="k-closed">—</div><div class="kpi-hint">Successfully delivered</div></div>
+    </div>
+    <div class="g2">
+      <div class="card"><div class="card-hd"><h3>Cases by Milestone</h3></div><div class="card-bd ch-wrap" style="height:220px"><canvas id="ch-milestone"></canvas></div></div>
+      <div class="card"><div class="card-hd"><h3>Cases by Forecast Go-Live Month</h3></div><div class="card-bd ch-wrap" style="height:220px"><canvas id="ch-golive"></canvas></div></div>
+    </div>
+    <div class="g2">
+      <div class="card"><div class="card-hd"><h3>Cases Missing Owner</h3><span class="bdg" id="bdg-noowner">0</span></div><div class="card-bd"><ul class="clist" id="list-noowner"></ul></div></div>
+      <div class="card"><div class="card-hd"><h3>Upcoming Go-Live (next 60 days)</h3><span class="bdg" id="bdg-upcoming">0</span></div><div class="card-bd"><ul class="clist" id="list-upcoming"></ul></div></div>
+    </div>
+  </div>
+
+  <!-- ── DASH 1: Delivery Health ── -->
+  <div class="dash" id="dash-1">
+    <div class="dh">
+      <div class="dh-title">Delivery Health</div>
+      <div class="dh-sub">Risk identification · Flag at-risk cases early</div>
+    </div>
+    <div class="g3">
+      <div class="kpi c-green"><div class="kpi-lbl">Green Cases</div><div class="kpi-val" id="k-green">—</div><div class="kpi-hint">On track</div></div>
+      <div class="kpi c-yellow"><div class="kpi-lbl">Yellow Cases</div><div class="kpi-val" id="k-yellow">—</div><div class="kpi-hint">At risk</div></div>
+      <div class="kpi c-red">  <div class="kpi-lbl">Red Cases</div><div class="kpi-val" id="k-red">—</div><div class="kpi-hint">Needs immediate attention</div></div>
+    </div>
+    <div class="g3">
+      <div class="kpi c-red">   <div class="kpi-lbl">Blockers &gt;14 Days</div><div class="kpi-val" id="k-oldblockers">—</div><div class="kpi-hint">Escalation candidates</div></div>
+      <div class="kpi c-yellow"><div class="kpi-lbl">Slipping Launches</div><div class="kpi-val" id="k-slipping">—</div><div class="kpi-hint">Go-live &lt;14 days &amp; not launch-ready</div></div>
+      <div class="kpi">         <div class="kpi-lbl">Stale Cases &gt;7 Days</div><div class="kpi-val" id="k-stale">—</div><div class="kpi-hint">No update in over a week</div></div>
+    </div>
+    <div class="g2">
+      <div class="card"><div class="card-hd"><h3>Red &amp; Yellow Cases</h3></div><div class="card-bd"><ul class="clist" id="list-atrisk"></ul></div></div>
+      <div class="card"><div class="card-hd"><h3>Long-Running Blockers (&gt;14 days)</h3></div><div class="card-bd"><ul class="clist" id="list-blockers"></ul></div></div>
+    </div>
+    <div class="g2">
+      <div class="card"><div class="card-hd"><h3>Slipping Launches</h3></div><div class="card-bd"><ul class="clist" id="list-slipping"></ul></div></div>
+      <div class="card"><div class="card-hd"><h3>Stale Cases (&gt;7 days no update)</h3></div><div class="card-bd"><ul class="clist" id="list-stale"></ul></div></div>
+    </div>
+  </div>
+
+  <!-- ── DASH 2: Capacity ── -->
+  <div class="dash" id="dash-2">
+    <div class="dh">
+      <div class="dh-title">Capacity</div>
+      <div class="dh-sub">Resource planning · DM workload and utilization</div>
+    </div>
+    <div class="g4">
+      <div class="kpi c-blue"> <div class="kpi-lbl">New Cases Queue</div><div class="kpi-val" id="k-queue">—</div><div class="kpi-hint">Pending assignment (M1)</div></div>
+      <div class="kpi c-green"><div class="kpi-lbl">Closed Cases</div><div class="kpi-val" id="k-closed2">—</div><div class="kpi-hint">Successfully delivered</div></div>
+      <div class="kpi">        <div class="kpi-lbl">Avg Complexity Score</div><div class="kpi-val" id="k-avgcx">—</div><div class="kpi-hint">Portfolio average / 100</div></div>
+      <div class="kpi">        <div class="kpi-lbl">DMs Active</div><div class="kpi-val" id="k-dms">—</div><div class="kpi-hint">Carrying ≥1 case</div></div>
+    </div>
+    <div class="g2">
+      <div class="card"><div class="card-hd"><h3>Cases per DM</h3></div><div class="card-bd ch-wrap" style="height:200px"><canvas id="ch-dmcases"></canvas></div></div>
+      <div class="card"><div class="card-hd"><h3>Weighted Load by DM (sum of complexity scores)</h3></div><div class="card-bd ch-wrap" style="height:200px"><canvas id="ch-dmload"></canvas></div></div>
+    </div>
+    <div class="g2">
+      <div class="card"><div class="card-hd"><h3>DM Utilization</h3></div><div class="card-bd" id="util-bars"></div></div>
+      <div class="card"><div class="card-hd"><h3>Cases by Complexity Score</h3></div><div class="card-bd ch-wrap" style="height:200px"><canvas id="ch-complexity"></canvas></div></div>
+    </div>
+    <div class="card">
+      <div class="card-hd">
+        <h3>DM Capacity Free-Up</h3>
+        <span style="font-size:11px;color:#706e6b">Based on forecast go-live dates · cases sorted earliest → latest</span>
+      </div>
+      <div class="card-bd" id="cap-freeup"></div>
+    </div>
+  </div>
+
+  <!-- ── DASH 3: Dependency Trends ── -->
+  <div class="dash" id="dash-3">
+    <div class="dh">
+      <div class="dh-title">Dependency Trends</div>
+      <div class="dh-sub">Identify systematic bottlenecks across the portfolio</div>
+    </div>
+    <div class="g3">
+      <div class="kpi">         <div class="kpi-lbl">Total Dependency Count</div><div class="kpi-val" id="k-deptotal">—</div><div class="kpi-hint">Cases with an active waiting-on team</div></div>
+      <div class="kpi c-yellow"><div class="kpi-lbl">Avg Dependency Aging</div><div class="kpi-val" id="k-depavg">—</div><div class="kpi-hint">Days (active dependencies only)</div></div>
+      <div class="kpi c-red">   <div class="kpi-lbl">Top Bottleneck</div><div class="kpi-val" id="k-deptop" style="font-size:18px">—</div><div class="kpi-hint">Most common waiting-on team</div></div>
+    </div>
+    <div class="g2">
+      <div class="card"><div class="card-hd"><h3>Waiting On — Case Count</h3></div><div class="card-bd ch-wrap" style="height:240px"><canvas id="ch-waiton"></canvas></div></div>
+      <div class="card"><div class="card-hd"><h3>Top Dependency Categories</h3></div><div class="card-bd ch-wrap" style="height:240px"><canvas id="ch-depdoughnut"></canvas></div></div>
+    </div>
+    <div class="card"><div class="card-hd"><h3>Dependency Detail</h3></div><div class="card-bd"><ul class="clist" id="list-deps"></ul></div></div>
+  </div>
+
+  <!-- ── DASH 4: All Cases ── -->
+  <div class="dash" id="dash-4">
+    <div class="dh">
+      <div class="dh-title">All Cases</div>
+      <div class="dh-sub">Full portfolio view · All active and closed cases</div>
+    </div>
+    <div class="card">
+      <div class="card-bd" style="padding:0;overflow-x:auto">
+        <table class="dt">
+          <thead><tr>
+            <th>Case ID</th><th>Account</th><th>DM</th><th>Milestone</th>
+            <th>Status</th><th>Complexity</th><th>Forecast Go-Live</th>
+            <th>Waiting On</th><th>Blocker Age</th><th>Last Updated</th>
+          </tr></thead>
+          <tbody id="dt-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── Sample Data ───────────────────────────────────────────────────────────────
+// Replace or extend CASES with real data from your case pages.
+const TODAY = new Date('2026-06-17');
+
+const CASES = [
+  { id:'CS-001', name:'Acme Corp',       dm:'Sarah Tan',  milestone:3, forecastDate:'2026-07-15', complexity:72, status:'Green',  blockerAge:5,  lastUpdated:2,  waitingOn:'Customer',  depAge:5  },
+  { id:'CS-002', name:'Globex Corp',     dm:'Mike Lim',   milestone:5, forecastDate:'2026-08-01', complexity:85, status:'Red',    blockerAge:18, lastUpdated:3,  waitingOn:'Product',   depAge:18 },
+  { id:'CS-003', name:'Initech Ltd',     dm:'Anna Chen',  milestone:2, forecastDate:'2026-09-10', complexity:45, status:'Yellow', blockerAge:9,  lastUpdated:6,  waitingOn:'LRC',       depAge:9  },
+  { id:'CS-004', name:'Umbrella Corp',   dm:'Sarah Tan',  milestone:7, forecastDate:'2026-06-30', complexity:91, status:'Red',    blockerAge:22, lastUpdated:8,  waitingOn:'CE',        depAge:22 },
+  { id:'CS-005', name:'Vandelay Ind',    dm:'',           milestone:1, forecastDate:'2026-10-01', complexity:30, status:'Green',  blockerAge:0,  lastUpdated:1,  waitingOn:'',          depAge:0  },
+  { id:'CS-006', name:'Soylent Corp',    dm:'Mike Lim',   milestone:4, forecastDate:'2026-07-20', complexity:68, status:'Yellow', blockerAge:11, lastUpdated:4,  waitingOn:'SE',        depAge:11 },
+  { id:'CS-007', name:'Massive Dynamic', dm:'Anna Chen',  milestone:6, forecastDate:'2026-08-15', complexity:55, status:'Green',  blockerAge:3,  lastUpdated:2,  waitingOn:'Customer',  depAge:3  },
+  { id:'CS-008', name:'Oceanic Airlines',dm:'',           milestone:2, forecastDate:'2026-11-01', complexity:40, status:'Yellow', blockerAge:0,  lastUpdated:10, waitingOn:'Case team', depAge:7  },
+  { id:'CS-009', name:'Bluth Company',   dm:'James Park', milestone:9, forecastDate:'2026-06-01', complexity:78, status:'Green',  blockerAge:0,  lastUpdated:3,  waitingOn:'',          depAge:0, closed:true },
+  { id:'CS-010', name:'Sterling Cooper', dm:'James Park', milestone:1, forecastDate:'2026-12-01', complexity:25, status:'Green',  blockerAge:0,  lastUpdated:1,  waitingOn:'Product',   depAge:2  },
+  { id:'CS-011', name:'Dunder Mifflin',  dm:'Sarah Tan',  milestone:4, forecastDate:'2026-07-05', complexity:60, status:'Yellow', blockerAge:16, lastUpdated:9,  waitingOn:'Legal',     depAge:16 },
+  { id:'CS-012', name:'Reynholm Ind',    dm:'Mike Lim',   milestone:3, forecastDate:'2026-08-20', complexity:48, status:'Green',  blockerAge:2,  lastUpdated:1,  waitingOn:'SE',        depAge:2  },
+];
+
+const ACTIVE = CASES.filter(c => !c.closed);
+const CLOSED = CASES.filter(c =>  c.closed);
+
+const MS_NAMES = {
+  1:'M1 Handover',2:'M2 Kickoff',3:'M3 Scope Signoff',4:'M4 Build Complete',
+  5:'M5 Testing',6:'M6 Launch Ready',7:'M7 Volume Ramp',8:'M8 Stabilization',9:'M9 Roll Off'
+};
+
+const TEAMS = ['Customer','Product','Legal','LRC','SE','CE','Case team','Other'];
+const TEAM_COLORS = ['#4e8fc7','#c87f4e','#e8c24e','#7cb8e8','#3ba755','#ba0517','#a16a00','#b0adab'];
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+function fmt(d)  { return new Date(d).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'}); }
+function daysUntil(d) { return Math.round((new Date(d)-TODAY)/86400000); }
+function dot(s)  { const c=s==='Red'?'r':s==='Yellow'?'y':'g'; return `<span class="dot ${c}"></span>`; }
+function sClass(s){ return s==='Red'?'sr':s==='Yellow'?'sy':'sg'; }
+function li(c, meta) {
+  return `<li><span class="cid">${c.id}</span><span class="cname">${c.name}</span><span class="cmeta">${meta}</span></li>`;
+}
+function noData(msg) { return `<li class="no-data">${msg||'No items to show.'}</li>`; }
+
+// ── Charts ────────────────────────────────────────────────────────────────────
+Chart.defaults.font.family = 'Arial, sans-serif';
+Chart.defaults.font.size   = 11;
+const CH = {};
+function mkChart(id, cfg) {
+  if (CH[id]) CH[id].destroy();
+  const el = document.getElementById(id);
+  if (!el) return;
+  CH[id] = new Chart(el, cfg);
+}
+
+const BAR_OPTS = (stepSize) => ({
+  responsive:true, maintainAspectRatio:false,
+  plugins:{legend:{display:false}},
+  scales:{
+    x:{grid:{display:false}},
+    y:{beginAtZero:true, ticks:{stepSize:stepSize||1}, grid:{color:'#f0f0f0'}}
+  }
+});
+
+// ── Dashboard builders ────────────────────────────────────────────────────────
+const built = {};
+function buildDash(n) {
+  if (built[n]) return;
+  built[n] = true;
+  [buildD0, buildD1, buildD2, buildD3, buildD4][n]();
+}
+
+// ── D0: Overall Status ────────────────────────────────────────────────────────
+function buildD0() {
+  document.getElementById('k-active').textContent  = ACTIVE.length;
+  document.getElementById('k-avgdays').textContent = '14'; // update with real tracking data
+  const noOwner = ACTIVE.filter(c => !c.dm);
+  document.getElementById('k-noowner').textContent = noOwner.length;
+  document.getElementById('k-closed').textContent  = CLOSED.length;
+
+  // Cases by Milestone
+  const msCnt = {};
+  for (let i=1;i<=9;i++) msCnt[i]=0;
+  ACTIVE.forEach(c => msCnt[c.milestone]++);
+  mkChart('ch-milestone',{type:'bar',data:{
+    labels:Object.keys(msCnt).map(m=>`M${m}`),
+    datasets:[{data:Object.values(msCnt),backgroundColor:'#4e8fc7',borderRadius:3}]
+  }, options:BAR_OPTS(1)});
+
+  // Cases by Go-Live Month
+  const monthCnt = {};
+  ACTIVE.forEach(c => {
+    const key = new Date(c.forecastDate).toLocaleDateString('en-GB',{month:'short',year:'2-digit'});
+    monthCnt[key] = (monthCnt[key]||0)+1;
+  });
+  mkChart('ch-golive',{type:'bar',data:{
+    labels:Object.keys(monthCnt),
+    datasets:[{data:Object.values(monthCnt),backgroundColor:'#7cb8e8',borderRadius:3}]
+  }, options:BAR_OPTS(1)});
+
+  // No-owner list
+  const noOwnerEl = document.getElementById('list-noowner');
+  document.getElementById('bdg-noowner').textContent = noOwner.length;
+  noOwnerEl.innerHTML = noOwner.length
+    ? noOwner.map(c=>li(c,`M${c.milestone} · No DM assigned`)).join('')
+    : noData('All cases have an owner.');
+
+  // Upcoming go-live
+  const upcoming = ACTIVE
+    .filter(c=>{ const d=daysUntil(c.forecastDate); return d>=0&&d<=60; })
+    .sort((a,b)=>new Date(a.forecastDate)-new Date(b.forecastDate));
+  document.getElementById('bdg-upcoming').textContent = upcoming.length;
+  document.getElementById('list-upcoming').innerHTML = upcoming.length
+    ? upcoming.map(c=>li(c,`${fmt(c.forecastDate)} · ${daysUntil(c.forecastDate)}d away`)).join('')
+    : noData('No cases going live in the next 60 days.');
+}
+
+// ── D1: Delivery Health ───────────────────────────────────────────────────────
+function buildD1() {
+  const green  = ACTIVE.filter(c=>c.status==='Green').length;
+  const yellow = ACTIVE.filter(c=>c.status==='Yellow').length;
+  const red    = ACTIVE.filter(c=>c.status==='Red').length;
+  document.getElementById('k-green').textContent  = green;
+  document.getElementById('k-yellow').textContent = yellow;
+  document.getElementById('k-red').textContent    = red;
+
+  const oldBlk = ACTIVE.filter(c=>c.blockerAge>14);
+  document.getElementById('k-oldblockers').textContent = oldBlk.length;
+
+  const slipping = ACTIVE.filter(c=>{ const d=daysUntil(c.forecastDate); return d>=0&&d<=14&&c.milestone<6; });
+  document.getElementById('k-slipping').textContent = slipping.length;
+
+  const stale = ACTIVE.filter(c=>c.lastUpdated>7);
+  document.getElementById('k-stale').textContent = stale.length;
+
+  // At-risk list
+  const atRisk = ACTIVE.filter(c=>c.status!=='Green').sort((a,b)=>a.status==='Red'?-1:1);
+  document.getElementById('list-atrisk').innerHTML = atRisk.length
+    ? atRisk.map(c=>`<li>${dot(c.status)}<span class="cid">${c.id}</span><span class="cname">${c.name}</span><span class="cmeta ${sClass(c.status)}">${c.status} · M${c.milestone}</span></li>`).join('')
+    : noData('No at-risk cases.');
+
+  // Blockers list
+  document.getElementById('list-blockers').innerHTML = oldBlk.length
+    ? oldBlk.sort((a,b)=>b.blockerAge-a.blockerAge).map(c=>li(c,`${c.blockerAge}d blocked · waiting on ${c.waitingOn||'—'}`)).join('')
+    : noData('No blockers older than 14 days.');
+
+  // Slipping list
+  document.getElementById('list-slipping').innerHTML = slipping.length
+    ? slipping.map(c=>li(c,`Go-live ${fmt(c.forecastDate)} · M${c.milestone} · ${daysUntil(c.forecastDate)}d left`)).join('')
+    : noData('No slipping launches.');
+
+  // Stale list
+  document.getElementById('list-stale').innerHTML = stale.length
+    ? stale.sort((a,b)=>b.lastUpdated-a.lastUpdated).map(c=>li(c,`Last update ${c.lastUpdated}d ago`)).join('')
+    : noData('All cases updated recently.');
+}
+
+// ── D2: Capacity ──────────────────────────────────────────────────────────────
+function buildD2() {
+  document.getElementById('k-queue').textContent  = ACTIVE.filter(c=>c.milestone===1).length;
+  document.getElementById('k-closed2').textContent= CLOSED.length;
+  document.getElementById('k-avgcx').textContent  = Math.round(ACTIVE.reduce((s,c)=>s+c.complexity,0)/ACTIVE.length);
+
+  const dms = [...new Set(ACTIVE.filter(c=>c.dm).map(c=>c.dm))].sort();
+  document.getElementById('k-dms').textContent = dms.length;
+
+  const dmCases={}, dmLoad={};
+  dms.forEach(d=>{ dmCases[d]=0; dmLoad[d]=0; });
+  ACTIVE.filter(c=>c.dm).forEach(c=>{ dmCases[c.dm]++; dmLoad[c.dm]+=c.complexity; });
+
+  mkChart('ch-dmcases',{type:'bar',data:{
+    labels:dms,
+    datasets:[{data:dms.map(d=>dmCases[d]),backgroundColor:'#4e8fc7',borderRadius:3}]
+  },options:BAR_OPTS(1)});
+
+  mkChart('ch-dmload',{type:'bar',data:{
+    labels:dms,
+    datasets:[{data:dms.map(d=>dmLoad[d]),backgroundColor:'#7cb8e8',borderRadius:3}]
+  },options:BAR_OPTS(50)});
+
+  // Utilization bars (cap = max cases any single DM holds, min 5)
+  const cap = Math.max(5, ...dms.map(d=>dmCases[d]));
+  document.getElementById('util-bars').innerHTML = dms.map(dm=>{
+    const n=dmCases[dm], pct=Math.round(n/cap*100);
+    const cls = pct>=80?'ph':pct>=60?'pm':'pl';
+    return `<div class="prow">
+      <div class="plbl"><span>${dm}</span><span>${n} case${n!==1?'s':''} · ${pct}%</span></div>
+      <div class="pbar"><div class="pfill ${cls}" style="width:${pct}%"></div></div>
+    </div>`;
+  }).join('');
+
+  // DM Capacity Free-Up
+  document.getElementById('cap-freeup').innerHTML = dms.map(dm => {
+    const dmCasesSorted = ACTIVE.filter(c=>c.dm===dm)
+      .sort((a,b)=>new Date(a.forecastDate)-new Date(b.forecastDate));
+    if (!dmCasesSorted.length) return '';
+
+    const nextCase = dmCasesSorted[0];
+    const lastCase = dmCasesSorted[dmCasesSorted.length-1];
+    const nextD = daysUntil(nextCase.forecastDate);
+    const lastD = daysUntil(lastCase.forecastDate);
+    const dLabel = d => d<0?`${Math.abs(d)}d overdue`:d===0?'Today':`in ${d}d`;
+    const dColor = d => d<0?'#ba0517':d<14?'#a16a00':'#0a6042';
+
+    const pills = dmCasesSorted.map(c=>{
+      const d = daysUntil(c.forecastDate);
+      const cls = d<0?'urgent':d<14?'urgent':d<30?'soon':'ok';
+      return `<div class="cap-case ${cls}">
+        <span class="cap-cid">${c.id}</span>
+        <span class="cap-cname">${c.name}</span>
+        <span class="cap-cdate">${fmt(c.forecastDate)}</span>
+        <span class="cap-cdays" style="color:${dColor(d)}">${dLabel(d)}</span>
+      </div>`;
+    }).join('');
+
+    return `<div class="cap-dm">
+      <div class="cap-dm-hdr">
+        <span class="cap-dm-name">${dm}</span>
+        <span class="free-tag next">⚡ Next free: ${fmt(nextCase.forecastDate)} (${dLabel(nextD)})</span>
+        ${dmCasesSorted.length>1?`<span class="free-tag full">🏁 Fully free: ${fmt(lastCase.forecastDate)} (${dLabel(lastD)})</span>`:''}
+      </div>
+      <div class="cap-cases">${pills}</div>
+    </div>`;
+  }).join('');
+
+  // Complexity distribution
+  const lo=ACTIVE.filter(c=>c.complexity<=33).length;
+  const md=ACTIVE.filter(c=>c.complexity>33&&c.complexity<=66).length;
+  const hi=ACTIVE.filter(c=>c.complexity>66).length;
+  mkChart('ch-complexity',{type:'doughnut',data:{
+    labels:['Low 0–33','Medium 34–66','High 67–100'],
+    datasets:[{data:[lo,md,hi],backgroundColor:['#3ba755','#f2b200','#ba0517'],borderWidth:2,borderColor:'#fff'}]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}}}});
+}
+
+// ── D3: Dependency Trends ─────────────────────────────────────────────────────
+function buildD3() {
+  const depCases = ACTIVE.filter(c=>c.waitingOn);
+  document.getElementById('k-deptotal').textContent = depCases.length;
+  const avgAge = depCases.length
+    ? Math.round(depCases.reduce((s,c)=>s+c.depAge,0)/depCases.length) : 0;
+  document.getElementById('k-depavg').textContent = avgAge+'d';
+
+  // Count by team
+  const tc={};
+  TEAMS.forEach(t=>tc[t]=0);
+  ACTIVE.forEach(c=>{
+    if (!c.waitingOn) return;
+    const t = TEAMS.includes(c.waitingOn) ? c.waitingOn : 'Other';
+    tc[t]++;
+  });
+
+  const sorted = Object.entries(tc).filter(([,v])=>v>0).sort((a,b)=>b[1]-a[1]);
+  document.getElementById('k-deptop').textContent = sorted.length ? sorted[0][0] : '—';
+
+  const labels = sorted.map(([k])=>k);
+  const vals   = sorted.map(([,v])=>v);
+  const colors = labels.map(l=>TEAM_COLORS[TEAMS.indexOf(l)]||'#b0adab');
+
+  mkChart('ch-waiton',{type:'bar',data:{
+    labels, datasets:[{data:vals,backgroundColor:colors,borderRadius:3}]
+  },options:BAR_OPTS(1)});
+
+  mkChart('ch-depdoughnut',{type:'doughnut',data:{
+    labels, datasets:[{data:vals,backgroundColor:colors,borderWidth:2,borderColor:'#fff'}]
+  },options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right'}}}});
+
+  document.getElementById('list-deps').innerHTML = depCases.length
+    ? depCases.sort((a,b)=>b.depAge-a.depAge).map(c=>
+        `<li><span class="cid">${c.id}</span><span class="cname">${c.name}</span><span class="cmeta">Waiting on <strong>${c.waitingOn}</strong> · ${c.depAge}d</span></li>`
+      ).join('')
+    : noData('No active dependencies.');
+}
+
+// ── D4: All Cases ─────────────────────────────────────────────────────────────
+function buildD4() {
+  document.getElementById('dt-body').innerHTML = CASES.map(c=>`<tr>
+    <td><strong>${c.id}</strong></td>
+    <td>${c.name}</td>
+    <td>${c.dm||'<span class="warn">⚠ Unassigned</span>'}</td>
+    <td><span class="mchip">M${c.milestone}</span></td>
+    <td class="${sClass(c.status)}">${dot(c.status)}${c.status}</td>
+    <td>${c.complexity}/100</td>
+    <td>${fmt(c.forecastDate)}</td>
+    <td>${c.waitingOn||'—'}</td>
+    <td>${c.blockerAge>0?c.blockerAge+'d':'—'}</td>
+    <td>${c.lastUpdated}d ago</td>
+  </tr>`).join('');
+}
+
+// ── Tab switching ─────────────────────────────────────────────────────────────
+function showDash(n) {
+  document.querySelectorAll('.dash').forEach((d,i)=>d.classList.toggle('on',i===n));
+  document.querySelectorAll('.ntab').forEach((t,i)=>t.classList.toggle('on',i===n));
+  buildDash(n);
+}
+
+// ── Boot ──────────────────────────────────────────────────────────────────────
+document.getElementById('hdr-date').textContent =
+  TODAY.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+buildDash(0);
+</script>
+</body>
+</html>
