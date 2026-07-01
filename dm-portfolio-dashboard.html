@@ -131,16 +131,16 @@ body{font-family:'Salesforce Sans',Arial,sans-serif;background:#f3f2f2;color:#18
     </div>
     <div class="g4">
       <div class="kpi c-blue"><div class="kpi-lbl">Active Cases</div><div class="kpi-val" id="k-active">—</div><div class="kpi-hint">Currently in delivery</div></div>
-      <div class="kpi">       <div class="kpi-lbl">Avg Days in Milestone</div><div class="kpi-val" id="k-avgdays">—</div><div class="kpi-hint">Across active portfolio</div></div>
-      <div class="kpi c-red"> <div class="kpi-lbl">Cases Missing Owner</div><div class="kpi-val" id="k-noowner">—</div><div class="kpi-hint">No DM assigned</div></div>
-      <div class="kpi c-green"><div class="kpi-lbl">Closed This Quarter</div><div class="kpi-val" id="k-closed">—</div><div class="kpi-hint">Successfully delivered</div></div>
+      <div class="kpi">       <div class="kpi-lbl">Avg Days in Pre-Go Live Stage</div><div class="kpi-val" id="k-avgdays">—</div></div>
+      <div class="kpi c-red"> <div class="kpi-lbl">Cases in the Queue</div><div class="kpi-val" id="k-noowner">—</div><div class="kpi-hint">No DM assigned</div></div>
+      <div class="kpi c-green"><div class="kpi-lbl">Closed This Month</div><div class="kpi-val" id="k-closed">—</div><div class="kpi-hint">Successfully delivered</div></div>
     </div>
     <div class="g2">
       <div class="card"><div class="card-hd"><h3>Cases by Milestone</h3></div><div class="card-bd ch-wrap" style="height:220px"><canvas id="ch-milestone"></canvas></div></div>
       <div class="card"><div class="card-hd"><h3>Cases by Forecast Go-Live Month</h3></div><div class="card-bd ch-wrap" style="height:220px"><canvas id="ch-golive"></canvas></div></div>
     </div>
     <div class="g2">
-      <div class="card"><div class="card-hd"><h3>Cases Missing Owner</h3><span class="bdg" id="bdg-noowner">0</span></div><div class="card-bd"><ul class="clist" id="list-noowner"></ul></div></div>
+      <div class="card"><div class="card-hd"><h3>Cases in the Queue</h3><span class="bdg" id="bdg-noowner">0</span></div><div class="card-bd"><ul class="clist" id="list-noowner"></ul></div></div>
       <div class="card"><div class="card-hd"><h3>Upcoming Go-Live (next 60 days)</h3><span class="bdg" id="bdg-upcoming">0</span></div><div class="card-bd"><ul class="clist" id="list-upcoming"></ul></div></div>
     </div>
   </div>
@@ -151,23 +151,15 @@ body{font-family:'Salesforce Sans',Arial,sans-serif;background:#f3f2f2;color:#18
       <div class="dh-title">Delivery Health</div>
       <div class="dh-sub">Risk identification · Flag at-risk cases early</div>
     </div>
-    <div class="g3">
+    <div class="g4">
       <div class="kpi c-green"><div class="kpi-lbl">Green Cases</div><div class="kpi-val" id="k-green">—</div><div class="kpi-hint">On track</div></div>
       <div class="kpi c-yellow"><div class="kpi-lbl">Yellow Cases</div><div class="kpi-val" id="k-yellow">—</div><div class="kpi-hint">At risk</div></div>
       <div class="kpi c-red">  <div class="kpi-lbl">Red Cases</div><div class="kpi-val" id="k-red">—</div><div class="kpi-hint">Needs immediate attention</div></div>
-    </div>
-    <div class="g3">
-      <div class="kpi c-red">   <div class="kpi-lbl">Blockers &gt;14 Days</div><div class="kpi-val" id="k-oldblockers">—</div><div class="kpi-hint">Escalation candidates</div></div>
-      <div class="kpi c-yellow"><div class="kpi-lbl">Slipping Launches</div><div class="kpi-val" id="k-slipping">—</div><div class="kpi-hint">Go-live &lt;14 days &amp; not launch-ready</div></div>
-      <div class="kpi">         <div class="kpi-lbl">Stale Cases &gt;7 Days</div><div class="kpi-val" id="k-stale">—</div><div class="kpi-hint">No update in over a week</div></div>
+      <div class="kpi c-red">  <div class="kpi-lbl">Blockers &gt;14 Days</div><div class="kpi-val" id="k-oldblockers">—</div><div class="kpi-hint">Escalation candidates</div></div>
     </div>
     <div class="g2">
       <div class="card"><div class="card-hd"><h3>Red &amp; Yellow Cases</h3></div><div class="card-bd"><ul class="clist" id="list-atrisk"></ul></div></div>
       <div class="card"><div class="card-hd"><h3>Long-Running Blockers (&gt;14 days)</h3></div><div class="card-bd"><ul class="clist" id="list-blockers"></ul></div></div>
-    </div>
-    <div class="g2">
-      <div class="card"><div class="card-hd"><h3>Slipping Launches</h3></div><div class="card-bd"><ul class="clist" id="list-slipping"></ul></div></div>
-      <div class="card"><div class="card-hd"><h3>Stale Cases (&gt;7 days no update)</h3></div><div class="card-bd"><ul class="clist" id="list-stale"></ul></div></div>
     </div>
   </div>
 
@@ -181,7 +173,7 @@ body{font-family:'Salesforce Sans',Arial,sans-serif;background:#f3f2f2;color:#18
       <div class="kpi c-blue"> <div class="kpi-lbl">New Cases Queue</div><div class="kpi-val" id="k-queue">—</div><div class="kpi-hint">Pending assignment (M1)</div></div>
       <div class="kpi c-green"><div class="kpi-lbl">Closed Cases</div><div class="kpi-val" id="k-closed2">—</div><div class="kpi-hint">Successfully delivered</div></div>
       <div class="kpi">        <div class="kpi-lbl">Avg Complexity Score</div><div class="kpi-val" id="k-avgcx">—</div><div class="kpi-hint">Portfolio average / 100</div></div>
-      <div class="kpi">        <div class="kpi-lbl">DMs Active</div><div class="kpi-val" id="k-dms">—</div><div class="kpi-hint">Carrying ≥1 case</div></div>
+      <div class="kpi c-red">   <div class="kpi-lbl">DMs at Max Capacity</div><div class="kpi-val" id="k-dms">—</div><div class="kpi-hint">Carrying 4 cases (full)</div></div>
     </div>
     <div class="g2">
       <div class="card"><div class="card-hd"><h3>Cases per DM</h3></div><div class="card-bd ch-wrap" style="height:200px"><canvas id="ch-dmcases"></canvas></div></div>
@@ -245,21 +237,49 @@ body{font-family:'Salesforce Sans',Arial,sans-serif;background:#f3f2f2;color:#18
 // Replace or extend CASES with real data from your case pages.
 const TODAY = new Date('2026-06-17');
 
+// bufferDays     = buffer DM added on top of milestone deadline
+// bufferConsumed = days eaten by slips so far
+// externalRed    = External (customer-controlled) items currently Red
+// sharedRed      = Shared (cross-team) items currently Red
 const CASES = [
-  { id:'CS-001', name:'Deel',            dm:'Kate Ye',  milestone:3, forecastDate:'2026-07-15', complexity:72, status:'Green',  blockerAge:5,  lastUpdated:2,  waitingOn:'Customer',  depAge:5  },
-  { id:'CS-002', name:'OTA',             dm:'Chris Yip',   milestone:5, forecastDate:'2026-08-01', complexity:85, status:'Red',    blockerAge:18, lastUpdated:3,  waitingOn:'Product',   depAge:18 },
-  { id:'CS-003', name:'BanPay',          dm:'Meet Shah',  milestone:2, forecastDate:'2026-09-10', complexity:45, status:'Yellow', blockerAge:9,  lastUpdated:6,  waitingOn:'LRC',       depAge:9  },
-  { id:'CS-004', name:'LBF Travel, Inc', dm:'Kate Ye',  milestone:7, forecastDate:'2026-06-30', complexity:91, status:'Red',    blockerAge:22, lastUpdated:8,  waitingOn:'CE',        depAge:22 },
-  { id:'CS-005', name:'Roblox',          dm:'',           milestone:1, forecastDate:'2026-10-01', complexity:30, status:'Green',  blockerAge:0,  lastUpdated:1,  waitingOn:'',          depAge:0  },
-  { id:'CS-006', name:'Navan',           dm:'Chris Yip',   milestone:4, forecastDate:'2026-07-20', complexity:68, status:'Yellow', blockerAge:11, lastUpdated:4,  waitingOn:'SE',        depAge:11 },
-  { id:'CS-007', name:'Dubpay',          dm:'Meet Shah',  milestone:6, forecastDate:'2026-08-15', complexity:55, status:'Green',  blockerAge:3,  lastUpdated:2,  waitingOn:'Customer',  depAge:3  },
-  { id:'CS-008', name:'Payability',      dm:'',           milestone:2, forecastDate:'2026-11-01', complexity:40, status:'Yellow', blockerAge:0,  lastUpdated:10, waitingOn:'Case team', depAge:7  },
-  { id:'CS-009', name:'LATAM',           dm:'Michael Eshoo', milestone:9, forecastDate:'2026-06-01', complexity:78, status:'Green',  blockerAge:0,  lastUpdated:3,  waitingOn:'',          depAge:0, closed:true },
-  { id:'CS-010', name:'ProcureDesk LLC', dm:'Michael Eshoo', milestone:1, forecastDate:'2026-12-01', complexity:25, status:'Green',  blockerAge:0,  lastUpdated:1,  waitingOn:'Product',   depAge:2  },
-  { id:'CS-011', name:'Xsolla',          dm:'Kate Ye',  milestone:4, forecastDate:'2026-07-05', complexity:60, status:'Yellow', blockerAge:16, lastUpdated:9,  waitingOn:'Legal',     depAge:16 },
-  { id:'CS-012', name:'Trucker Path',    dm:'Chris Yip',   milestone:3, forecastDate:'2026-08-20', complexity:48, status:'Green',  blockerAge:2,  lastUpdated:1,  waitingOn:'SE',        depAge:2  },
-  { id:'CS-013', name:'Routable',        dm:'Meet Shah',  milestone:1, forecastDate:'2026-09-30', complexity:35, status:'Green',  blockerAge:0,  lastUpdated:2,  waitingOn:'',          depAge:0  },
+  { id:'CS-001', name:'Deel',            dm:'Kate Ye',      milestone:3, forecastDate:'2026-07-15', complexity:72, bufferDays:10, bufferConsumed:1, externalRed:0, sharedRed:0, blockerAge:0,  lastUpdated:2,  waitingOn:'',          depAge:0  },
+  { id:'CS-002', name:'OTA',             dm:'Chris Yip',    milestone:5, forecastDate:'2026-08-01', complexity:85, bufferDays:7,  bufferConsumed:7, externalRed:1, sharedRed:0, blockerAge:18, lastUpdated:3,  waitingOn:'Product',   depAge:18 },
+  { id:'CS-003', name:'BanPay',          dm:'Meet Shah',    milestone:2, forecastDate:'2026-09-10', complexity:45, bufferDays:10, bufferConsumed:2, externalRed:0, sharedRed:0, blockerAge:0,  lastUpdated:2,  waitingOn:'',          depAge:0  },
+  { id:'CS-004', name:'LBF Travel, Inc', dm:'Kate Ye',      milestone:7, forecastDate:'2026-07-10', complexity:91, bufferDays:10, bufferConsumed:7, externalRed:0, sharedRed:1, blockerAge:11, lastUpdated:4,  waitingOn:'Customer',  depAge:11 },
+  { id:'CS-005', name:'Roblox',          dm:'',             milestone:1, forecastDate:'2026-10-01', complexity:30, bufferDays:10, bufferConsumed:0, externalRed:0, sharedRed:0, blockerAge:0,  lastUpdated:1,  waitingOn:'',          depAge:0  },
+  { id:'CS-006', name:'Navan',           dm:'Chris Yip',    milestone:4, forecastDate:'2026-07-20', complexity:68, bufferDays:10, bufferConsumed:7, externalRed:0, sharedRed:1, blockerAge:8,  lastUpdated:4,  waitingOn:'Legal',     depAge:8  },
+  { id:'CS-007', name:'Dubpay',          dm:'Meet Shah',    milestone:6, forecastDate:'2026-08-15', complexity:55, bufferDays:10, bufferConsumed:1, externalRed:0, sharedRed:0, blockerAge:0,  lastUpdated:2,  waitingOn:'',          depAge:0  },
+  { id:'CS-008', name:'Payability',      dm:'',             milestone:2, forecastDate:'2026-11-01', complexity:40, bufferDays:10, bufferConsumed:0, externalRed:0, sharedRed:0, blockerAge:0,  lastUpdated:3,  waitingOn:'',          depAge:0  },
+  { id:'CS-009', name:'LATAM',           dm:'Michael Eshoo',milestone:9, forecastDate:'2026-06-01', complexity:78, bufferDays:7,  bufferConsumed:0, externalRed:0, sharedRed:0, blockerAge:0,  lastUpdated:3,  waitingOn:'',          depAge:0, closed:true },
+  { id:'CS-010', name:'ProcureDesk LLC', dm:'Michael Eshoo',milestone:1, forecastDate:'2026-12-01', complexity:25, bufferDays:10, bufferConsumed:0, externalRed:0, sharedRed:0, blockerAge:0,  lastUpdated:1,  waitingOn:'',          depAge:0  },
+  { id:'CS-011', name:'Xsolla',          dm:'Kate Ye',      milestone:4, forecastDate:'2026-07-05', complexity:60, bufferDays:10, bufferConsumed:1, externalRed:0, sharedRed:0, blockerAge:0,  lastUpdated:2,  waitingOn:'',          depAge:0  },
+  { id:'CS-012', name:'Trucker Path',    dm:'',             milestone:3, forecastDate:'2026-08-20', complexity:48, bufferDays:10, bufferConsumed:0, externalRed:0, sharedRed:0, blockerAge:0,  lastUpdated:1,  waitingOn:'',          depAge:0  },
+  { id:'CS-013', name:'Routable',        dm:'Meet Shah',    milestone:2, forecastDate:'2026-09-30', complexity:35, bufferDays:10, bufferConsumed:0, externalRed:0, sharedRed:0, blockerAge:0,  lastUpdated:2,  waitingOn:'',          depAge:0  },
+  { id:'CS-014', name:'Airwallex',       dm:'',             milestone:6, forecastDate:'2026-08-30', complexity:65, bufferDays:10, bufferConsumed:1, externalRed:0, sharedRed:0, blockerAge:0,  lastUpdated:2,  waitingOn:'',          depAge:0  },
+  { id:'CS-015', name:'Stripe',          dm:'',             milestone:4, forecastDate:'2026-09-15', complexity:58, bufferDays:10, bufferConsumed:0, externalRed:0, sharedRed:0, blockerAge:0,  lastUpdated:3,  waitingOn:'',          depAge:0  },
+  { id:'CS-016', name:'Rippling',        dm:'Meet Shah',    milestone:3, forecastDate:'2026-10-10', complexity:42, bufferDays:10, bufferConsumed:0, externalRed:0, sharedRed:0, blockerAge:0,  lastUpdated:1,  waitingOn:'',          depAge:0  },
+  { id:'CS-017', name:'Brex',            dm:'',             milestone:2, forecastDate:'2026-09-01', complexity:50, bufferDays:10, bufferConsumed:0, externalRed:0, sharedRed:0, blockerAge:0,  lastUpdated:2,  waitingOn:'',          depAge:0  },
+  { id:'CS-018', name:'Mercury',         dm:'',             milestone:4, forecastDate:'2026-10-15', complexity:55, bufferDays:10, bufferConsumed:0, externalRed:0, sharedRed:0, blockerAge:0,  lastUpdated:1,  waitingOn:'',          depAge:0  },
+  { id:'CS-019', name:'Gusto',           dm:'',             milestone:3, forecastDate:'2026-11-01', complexity:48, bufferDays:10, bufferConsumed:0, externalRed:0, sharedRed:0, blockerAge:0,  lastUpdated:2,  waitingOn:'',          depAge:0  },
 ];
+
+// Status is never set manually — always derived from buffer + dependency types
+function deriveStatus(c) {
+  const left = c.bufferDays - c.bufferConsumed;
+  if (c.externalRed > 0 || left <= 0)  return 'Red';
+  if (c.sharedRed   > 0 || left <= 3)  return 'Yellow';
+  if (left <= 7)                        return 'Yellow';
+  return 'Green';
+}
+function deriveReason(c) {
+  const left = c.bufferDays - c.bufferConsumed;
+  if (c.externalRed > 0)  return `Ext blocked · ${left}d buffer left`;
+  if (left <= 0)          return 'Buffer exhausted';
+  if (c.sharedRed   > 0)  return `Escalation needed · ${left}d buffer left`;
+  if (left <= 3)          return `${left}d buffer left`;
+  if (left <= 7)          return `${left}d buffer — watch`;
+  return `${left}d buffer`;
+}
 
 const ACTIVE = CASES.filter(c => !c.closed);
 const CLOSED = CASES.filter(c =>  c.closed);
@@ -357,9 +377,9 @@ function buildD0() {
 
 // ── D1: Delivery Health ───────────────────────────────────────────────────────
 function buildD1() {
-  const green  = ACTIVE.filter(c=>c.status==='Green').length;
-  const yellow = ACTIVE.filter(c=>c.status==='Yellow').length;
-  const red    = ACTIVE.filter(c=>c.status==='Red').length;
+  const green  = ACTIVE.filter(c=>deriveStatus(c)==='Green').length;
+  const yellow = ACTIVE.filter(c=>deriveStatus(c)==='Yellow').length;
+  const red    = ACTIVE.filter(c=>deriveStatus(c)==='Red').length;
   document.getElementById('k-green').textContent  = green;
   document.getElementById('k-yellow').textContent = yellow;
   document.getElementById('k-red').textContent    = red;
@@ -367,32 +387,16 @@ function buildD1() {
   const oldBlk = ACTIVE.filter(c=>c.blockerAge>14);
   document.getElementById('k-oldblockers').textContent = oldBlk.length;
 
-  const slipping = ACTIVE.filter(c=>{ const d=daysUntil(c.forecastDate); return d>=0&&d<=14&&c.milestone<6; });
-  document.getElementById('k-slipping').textContent = slipping.length;
-
-  const stale = ACTIVE.filter(c=>c.lastUpdated>7);
-  document.getElementById('k-stale').textContent = stale.length;
-
-  // At-risk list
-  const atRisk = ACTIVE.filter(c=>c.status!=='Green').sort((a,b)=>a.status==='Red'?-1:1);
+  // At-risk list (with blocker info)
+  const atRisk = ACTIVE.filter(c=>deriveStatus(c)!=='Green').sort((a,b)=>deriveStatus(a)==='Red'?-1:1);
   document.getElementById('list-atrisk').innerHTML = atRisk.length
-    ? atRisk.map(c=>`<li>${dot(c.status)}<span class="cid">${c.id}</span><span class="cname">${c.name}</span><span class="cmeta ${sClass(c.status)}">${c.status} · M${c.milestone}</span></li>`).join('')
+    ? atRisk.map(c=>`<li>${dot(deriveStatus(c))}<span class="cid">${c.id}</span><span class="cname">${c.name}</span><span class="cmeta ${sClass(deriveStatus(c))}">${deriveReason(c)} · M${c.milestone}${c.waitingOn?' · Blocked: '+c.waitingOn:''}</span></li>`).join('')
     : noData('No at-risk cases.');
 
   // Blockers list
   document.getElementById('list-blockers').innerHTML = oldBlk.length
     ? oldBlk.sort((a,b)=>b.blockerAge-a.blockerAge).map(c=>li(c,`${c.blockerAge}d blocked · waiting on ${c.waitingOn||'—'}`)).join('')
     : noData('No blockers older than 14 days.');
-
-  // Slipping list
-  document.getElementById('list-slipping').innerHTML = slipping.length
-    ? slipping.map(c=>li(c,`Go-live ${fmt(c.forecastDate)} · M${c.milestone} · ${daysUntil(c.forecastDate)}d left`)).join('')
-    : noData('No slipping launches.');
-
-  // Stale list
-  document.getElementById('list-stale').innerHTML = stale.length
-    ? stale.sort((a,b)=>b.lastUpdated-a.lastUpdated).map(c=>li(c,`Last update ${c.lastUpdated}d ago`)).join('')
-    : noData('All cases updated recently.');
 }
 
 // ── D2: Capacity ──────────────────────────────────────────────────────────────
@@ -402,11 +406,12 @@ function buildD2() {
   document.getElementById('k-avgcx').textContent  = Math.round(ACTIVE.reduce((s,c)=>s+c.complexity,0)/ACTIVE.length);
 
   const dms = [...new Set(ACTIVE.filter(c=>c.dm).map(c=>c.dm))].sort();
-  document.getElementById('k-dms').textContent = dms.length;
 
   const dmCases={}, dmLoad={};
   dms.forEach(d=>{ dmCases[d]=0; dmLoad[d]=0; });
   ACTIVE.filter(c=>c.dm).forEach(c=>{ dmCases[c.dm]++; dmLoad[c.dm]+=c.complexity; });
+
+  document.getElementById('k-dms').textContent = dms.filter(d=>dmCases[d]>=4).length;
 
   mkChart('ch-dmcases',{type:'bar',data:{
     labels:dms,
@@ -418,8 +423,8 @@ function buildD2() {
     datasets:[{data:dms.map(d=>dmLoad[d]),backgroundColor:'#7cb8e8',borderRadius:3}]
   },options:BAR_OPTS(50)});
 
-  // Utilization bars (cap = max cases any single DM holds, min 5)
-  const cap = Math.max(5, ...dms.map(d=>dmCases[d]));
+  // Utilization bars (cap = max capacity per DM = 4 cases)
+  const cap = 4;
   document.getElementById('util-bars').innerHTML = dms.map(dm=>{
     const n=dmCases[dm], pct=Math.round(n/cap*100);
     const cls = pct>=80?'ph':pct>=60?'pm':'pl';
@@ -519,7 +524,7 @@ function buildD4() {
     <td>${c.name}</td>
     <td>${c.dm||'<span class="warn">⚠ Unassigned</span>'}</td>
     <td><span class="mchip">M${c.milestone}</span></td>
-    <td class="${sClass(c.status)}">${dot(c.status)}${c.status}</td>
+    <td class="${sClass(deriveStatus(c))}">${dot(deriveStatus(c))}${deriveStatus(c)} <span style="font-size:10px;color:#706e6b">(${deriveReason(c)})</span></td>
     <td>${c.complexity}/100</td>
     <td>${fmt(c.forecastDate)}</td>
     <td>${c.waitingOn||'—'}</td>
